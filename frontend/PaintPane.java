@@ -6,11 +6,13 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+
 
 public class PaintPane extends BorderPane {
 
@@ -30,6 +32,11 @@ public class PaintPane extends BorderPane {
 	ToggleButton squareButton = new ToggleButton("Cuadrado");
 	ToggleButton ellipseButton = new ToggleButton("Elipse");
 	ToggleButton deleteButton = new ToggleButton("Borrar");
+//	Slider thicknessBorder = new Slider(1, 50, 1);
+//	thicknessBorder.setShowTickLabels(true);
+//	thicknessBorder.setShowTickMarks(true);
+//	thicknessBorder.setMajorTickUnit(10);
+//	thicknessBorder.setBlockIncrement(5);
 
 	// Dibujar una figura
 	Point startPoint;
