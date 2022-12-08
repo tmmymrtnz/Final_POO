@@ -36,6 +36,11 @@ public class Point {
         return Double.compare(point.y, y) == 0;
     }
 
+    public void movePoint(double x, double y) {
+        this.x += x;
+        this.y += y;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
