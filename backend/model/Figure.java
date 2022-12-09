@@ -34,9 +34,7 @@ public abstract class Figure {
     }
 
     public abstract void moveFigure(double x, double y);
-
-    public abstract void strokeAndFillFigure(GraphicsContext gc);
-
+    public abstract String getFigureName();
     public abstract boolean belongs(Point point);
     public abstract String toString();
 
