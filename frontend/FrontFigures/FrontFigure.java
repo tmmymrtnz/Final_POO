@@ -2,6 +2,9 @@ package frontend.FrontFigures;
 
 import backend.model.Figure;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import backend.model.Point;
+
 
 import java.awt.*;
 
@@ -48,6 +51,15 @@ public abstract class FrontFigure {
         return figure.belongs(point);
     }
 
-    public abstract void strokeAndFill();
+    public boolean belongs(Point eventPoint) { return figure.belongs(eventPoint); }
 
+    public double getThicknessBorder() {
+        return figure.getThicknessBorder();
+    }
+
+    public abstract void strokeAndFillFigure();
+
+    public void setThicknessBorder(double value) { figure.setThicknessBorder(value); }
+
+    public void moveFigure(double diffX, double diffY) { figure.moveFigure(diffX, diffY); }
 }

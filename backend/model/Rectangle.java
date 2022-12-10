@@ -25,7 +25,6 @@ public class Rectangle extends Figure {
         bottomRight.movePoint(x, y);
     }
 
-    @Override
     public void strokeAndFillFigure(GraphicsContext gc) {
         gc.fillRect(topLeft.getX(), topLeft.getY(), bottomRight.getX() - topLeft.getX(), bottomRight.getY() - topLeft.getY());
         gc.strokeRect(topLeft.getX(), topLeft.getY(), bottomRight.getX() - topLeft.getX(), bottomRight.getY() - topLeft.getY());

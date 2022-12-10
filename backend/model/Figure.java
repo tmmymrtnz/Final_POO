@@ -38,4 +38,9 @@ public abstract class Figure {
     public abstract boolean belongs(Point point);
     public abstract String toString();
 
+    public abstract Point getCenterPoint();
+    public abstract double getsMayorAxis();
+    public abstract double getsMinorAxis();
+
+
 }

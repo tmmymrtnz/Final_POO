@@ -8,7 +8,7 @@ public class FrontEllipse extends FrontFigure {
         super(figure, gc, lineColor, lineWidth, fillColor);
     }
     @Override
-    public void strokeAndFill() {
+    public void strokeAndFillFigure() {
         gc.fillOval(figure.getCenterPoint().getX() - figure.getsMayorAxis() / 2,
                 figure.getCenterPoint().getY() - figure.getsMinorAxis() / 2,
                 figure.getsMayorAxis(), figure.getsMinorAxis());

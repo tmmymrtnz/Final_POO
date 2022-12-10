@@ -2,6 +2,8 @@ package frontend.FrontFigures;
 import backend.model.Figure;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import java.awt.*;
+
 
 public class FrontRectangle extends FrontFigure {
     public FrontRectangle(Figure figure, GraphicsContext gc, Color lineColor, double lineWidth, Color fillColor) {
