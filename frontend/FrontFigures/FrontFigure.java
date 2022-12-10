@@ -13,7 +13,6 @@ public abstract class FrontFigure {
     protected GraphicsContext gc;
     protected Figure figure;
     private Color lineColor, fillColor;
-    private double lineWidth;
 
     public FrontFigure(Figure figure, GraphicsContext gc, Color lineColor, double lineWidth, Color fillColor) {
         this.figure = figure;
@@ -23,15 +22,12 @@ public abstract class FrontFigure {
 
     public void setConf(Color lineColor, double lineWidth, Color fillColor) {
         setLineColor(lineColor);
-        setLineWidth(lineWidth);
+        setThicknessBorder(lineWidth);
         setFillColor(fillColor);
     }
 
     public void setLineColor(Color lineColor) {
         this.lineColor = lineColor;
-    }
-    public void setLineWidth(double lineWidth) {
-        this.lineWidth = lineWidth;
     }
     public void setFillColor(Color fillColor) {
         this.fillColor = fillColor;
@@ -39,9 +35,6 @@ public abstract class FrontFigure {
 
     public Color getLineColor() {
         return lineColor;
-    }
-    public double getLineWidth() {
-        return lineWidth;
     }
     public Color getFillColor() {
         return fillColor;

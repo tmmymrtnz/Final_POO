@@ -214,9 +214,7 @@ public class PaintPane extends BorderPane {
 		for (FrontFigure figure : canvasState.figures()) {
 			if (figureBelongs(figure, eventPoint)) {
 				found = true;
-				figure.setLineColor(copyFigure.getLineColor());
-				figure.setFillColor(copyFigure.getFillColor());
-				figure.setThicknessBorder(copyFigure.getThicknessBorder());
+				figure.setConf(copyFigure.getLineColor(), copyFigure.getThicknessBorder(), copyFigure.getFillColor());
 				copyFigure = null;
 				redrawCanvas();
 			}
