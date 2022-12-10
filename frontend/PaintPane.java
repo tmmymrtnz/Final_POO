@@ -55,7 +55,7 @@ public class PaintPane extends BorderPane {
 	FrontFigure selectedFigure;
 
 	// Copiar formato
-	Figure copyFigure;
+	FrontFigure copyFigure;
 
 	// StatusBar
 	StatusPane statusPane;
@@ -97,34 +97,16 @@ public class PaintPane extends BorderPane {
 
 		canvas.setOnMouseReleased(event -> {
 			Point endPoint = new Point(event.getX(), event.getY());
-			if(startPoint == null) {
-				return ;
-			}
-			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
-				return ;
-			}
-			FrontFigure newFigure = Buttons.getFrontFigure(startPoint, endPoint, gc, lineColor, thicknessBorder.getValue(), fillColor);
-			if(newFigure == null) {
+			if (startPoint == null) {
 				return;
 			}
-
-//			if(rectangleButton.isSelected()) {
-//				newFigure = new Rectangle(startPoint, endPoint);
-//			}
-//			else if(circleButton.isSelected()) {
-//				double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-//				newFigure = new Circle(startPoint, circleRadius);
-//			} else if(squareButton.isSelected()) {
-//				double size = Math.abs(endPoint.getX() - startPoint.getX());
-//				newFigure = new Square(startPoint, size);
-//			} else if(ellipseButton.isSelected()) {
-//				Point centerPoint = new Point(Math.abs(endPoint.x + startPoint.x) / 2, (Math.abs((endPoint.y + startPoint.y)) / 2));
-//				double sMayorAxis = Math.abs(endPoint.x - startPoint.x);
-//				double sMinorAxis = Math.abs(endPoint.y - startPoint.y);
-//				newFigure = new Ellipse(centerPoint, sMayorAxis, sMinorAxis);
-//			} else {
-//				return ;
-//			}
+			if (endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
+				return;
+			}
+			FrontFigure newFigure = Buttons.getFrontFigure(startPoint, endPoint, gc, lineColor, thicknessBorder.getValue(), fillColor);
+			if (newFigure == null) {
+				return;
+			}
 			canvasState.addFigure(newFigure);
 			startPoint = null;
 			redrawCanvas();
@@ -134,13 +116,13 @@ public class PaintPane extends BorderPane {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
 			StringBuilder label = new StringBuilder();
-			for(FrontFigure figure : canvasState.figures()) {
-				if(figureBelongs(figure, eventPoint)) {
+			for (FrontFigure figure : canvasState.figures()) {
+				if (figureBelongs(figure, eventPoint)) {
 					found = true;
 					label.append(figure.toString());
 				}
 			}
-			if(found) {
+			if (found) {
 				statusPane.updateStatus(label.toString());
 			} else {
 				statusPane.updateStatus(eventPoint.toString());
@@ -148,12 +130,12 @@ public class PaintPane extends BorderPane {
 		});
 
 		canvas.setOnMouseClicked(event -> {
-			if(selectionButton.isSelected()) {
-				Point eventPoint = new Point(event.getX(), event.getY());
-				boolean found = false;
+			Point eventPoint = new Point(event.getX(), event.getY());
+			boolean found = false;
+			if (selectionButton.isSelected()) {
 				StringBuilder label = new StringBuilder("Se seleccionó: ");
 				for (FrontFigure figure : canvasState.figures()) {
-					if(figureBelongs(figure, eventPoint)) {
+					if (figureBelongs(figure, eventPoint)) {
 						found = true;
 						selectedFigure = figure;
 						label.append(figure.toString());
@@ -167,15 +149,18 @@ public class PaintPane extends BorderPane {
 				}
 				redrawCanvas();
 			}
+			if (copyFigure != null) {
+				pasteFormat(found, eventPoint);
+			}
 		});
 
 		canvas.setOnMouseDragged(event -> {
-			if(selectionButton.isSelected()) {
+			if (selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
-				double diffX = (eventPoint.getX() - startPoint.getX())/500;
-				double diffY = (eventPoint.getY() - startPoint.getY())/500;
+				double diffX = (eventPoint.getX() - startPoint.getX()) / 500;
+				double diffY = (eventPoint.getY() - startPoint.getY()) / 500;
 
-				if(selectedFigure != null) {
+				if (selectedFigure != null) {
 					selectedFigure.moveFigure(diffX, diffY);
 					//startPoint = eventPoint;
 					redrawCanvas();
@@ -183,13 +168,19 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
-		deleteButton.setOnAction(event -> {
+
+		copyFormat.setOnAction(event -> {
 			if (selectedFigure != null) {
-				canvasState.deleteFigure(selectedFigure);
-				selectedFigure = null;
-				redrawCanvas();
+				copyFigure = selectedFigure;
 			}
 		});
+//		deleteButton.setOnAction(event -> {
+//			if (selectedFigure != null) {
+//				canvasState.deleteFigure(selectedFigure);
+//				selectedFigure = null;
+//				redrawCanvas();
+//			}
+//		});
 
 		lineColorPicker.setOnAction(event -> {
 			if (selectedFigure != null) {
@@ -213,35 +204,24 @@ public class PaintPane extends BorderPane {
 		});
 
 
-//		copyFormat.setOnAction(event -> {
-//			if (selectedFigure != null) {
-//				copyFigure = selectedFigure;
-//			}
-//		});
-//
-//		canvas.setOnMouseClicked(event -> {
-//			if (!selectionButton.isSelected() && copyFigure != null){
-//				Point eventPoint = new Point(event.getX(), event.getY());
-//				boolean found = false;
-//				for (Figure figure : canvasState.figures()) {
-//					if (figureBelongs(figure, eventPoint)) {
-//						found = true;
-//						figure.setLineColor(copyFigure.getLineColor());
-//						figure.setFillColor(copyFigure.getFillColor());
-//						figure.setThicknessBorder(copyFigure.getThicknessBorder());
-//						copyFigure = null;
-//						redrawCanvas();
-//					}
-//				}
-//			}
-//
-//
-//		});
+
 
 		setLeft(buttonsBox);
 		setRight(canvas);
 	}
 
+	void pasteFormat(boolean found, Point eventPoint) {
+		for (FrontFigure figure : canvasState.figures()) {
+			if (figureBelongs(figure, eventPoint)) {
+				found = true;
+				figure.setLineColor(copyFigure.getLineColor());
+				figure.setFillColor(copyFigure.getFillColor());
+				figure.setThicknessBorder(copyFigure.getThicknessBorder());
+				copyFigure = null;
+				redrawCanvas();
+			}
+		}
+	}
 
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -253,7 +233,7 @@ public class PaintPane extends BorderPane {
 				gc.setStroke(figure.getLineColor());
 			}
 			gc.setFill(figure.getFillColor());
-			figure.strokeAndFillFigure(); //chequear si es necesario pasar el gc
+			figure.strokeAndFillFigure();
 		}
 	}
 
