@@ -43,7 +43,7 @@ public class Ellipse extends Figure {
 
     @Override
     public void moveCenter(double x, double y) {
-        this.centerPoint.movePoint(x, y);
+        this.centerPoint.changePoint(x, y);
     }
 
     @Override

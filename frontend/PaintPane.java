@@ -73,6 +73,9 @@ public class PaintPane extends BorderPane {
 	// StatusBar
 	StatusPane statusPane;
 
+	// Centro
+	private final Point centerPoint = new Point(400, 300);
+
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
@@ -259,10 +262,16 @@ public class PaintPane extends BorderPane {
 		setRight(canvas);
 	}
 
+//	void pasteFigureCenter(FrontFigure figure){
+//		double x = (canvas.getWidth() - figure.getWidth()) / 2;
+//		double y = (canvas.getHeight() - figure.getHeight()) / 2;
+//		figure.moveFigure(x, y);
+//		canvasState.addFigure(figure);
+//	}
 	void pasteFigure(FrontFigure toPaste){
 		FrontFigure newFigure = toPaste.copyFigure(toPaste);
-		newFigure.moveFigure(10,-10);
-		canvasState.addFigure(toPaste);
+		newFigure.moveCenter(canvas.getWidth()/2,canvas.getHeight()/2); //corregir moves
+		canvasState.addFigure(newFigure);
 		redrawCanvas();
 	}
 	void pasteFormat(Point eventPoint) {
