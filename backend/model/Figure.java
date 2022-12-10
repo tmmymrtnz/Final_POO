@@ -42,5 +42,8 @@ public abstract class Figure {
     public abstract double getsMayorAxis();
     public abstract double getsMinorAxis();
 
+    public abstract void moveCenter(double x, double y);
+
+    public abstract void strokeAndFillFigure(GraphicsContext gc);
 
 }

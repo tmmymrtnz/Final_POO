@@ -35,4 +35,5 @@ public class AppMenuBar extends MenuBar {
         getMenus().addAll(file, help);
     }
 
+
 }

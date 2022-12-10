@@ -25,9 +25,9 @@ public class Rectangle extends Figure {
         bottomRight.movePoint(x, y);
     }
 
-    public void strokeAndFillFigure(GraphicsContext gc) {
-        gc.fillRect(topLeft.getX(), topLeft.getY(), bottomRight.getX() - topLeft.getX(), bottomRight.getY() - topLeft.getY());
-        gc.strokeRect(topLeft.getX(), topLeft.getY(), bottomRight.getX() - topLeft.getX(), bottomRight.getY() - topLeft.getY());
+    @Override
+    public void moveCenter(double x, double y) {
+        this.centerPoint.movePoint(x, y);
     }
 
     @Override

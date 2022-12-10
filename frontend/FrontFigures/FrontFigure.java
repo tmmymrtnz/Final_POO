@@ -8,7 +8,7 @@ import backend.model.Point;
 
 import java.awt.*;
 
-public abstract class FrontFigure {
+public class FrontFigure {
 
     protected GraphicsContext gc;
     protected Figure figure;
@@ -20,7 +20,7 @@ public abstract class FrontFigure {
         setConf(lineColor, lineWidth, fillColor);
     }
 
-    public void setConf(Color lineColor, double lineWidth, Color fillColor) {
+    private void setConf(Color lineColor, double lineWidth, Color fillColor) {
         setLineColor(lineColor);
         setThicknessBorder(lineWidth);
         setFillColor(fillColor);
@@ -29,6 +29,7 @@ public abstract class FrontFigure {
     public void setLineColor(Color lineColor) {
         this.lineColor = lineColor;
     }
+
     public void setFillColor(Color fillColor) {
         this.fillColor = fillColor;
     }
@@ -36,6 +37,7 @@ public abstract class FrontFigure {
     public Color getLineColor() {
         return lineColor;
     }
+
     public Color getFillColor() {
         return fillColor;
     }
@@ -44,15 +46,44 @@ public abstract class FrontFigure {
         return figure.belongs(point);
     }
 
-    public boolean belongs(Point eventPoint) { return figure.belongs(eventPoint); }
+    public boolean belongs(Point eventPoint) {
+        return figure.belongs(eventPoint);
+    }
 
     public double getThicknessBorder() {
         return figure.getThicknessBorder();
     }
 
-    public abstract void strokeAndFillFigure();
+    public void strokeAndFillFigure() { figure.strokeAndFillFigure(gc); }
 
-    public void setThicknessBorder(double value) { figure.setThicknessBorder(value); }
+    public void setThicknessBorder(double value) {
+        figure.setThicknessBorder(value);
+    }
 
-    public void moveFigure(double diffX, double diffY) { figure.moveFigure(diffX, diffY); }
+    public void moveFigure(double diffX, double diffY) {
+        figure.moveFigure(diffX, diffY);
+    }
+
+    public void moveCenter(double diffX, double diffY) {
+        figure.moveCenter(diffX, diffY);
+    }
+
+    public String toString() {
+        return figure.toString();
+    }
+
+    public void copyFormat(FrontFigure figure) {
+        setConf(figure.getLineColor(), figure.getThicknessBorder(), figure.getFillColor());
+    }
+
+    public Figure getFigure() {
+        return figure;
+    }
+
+    //raro
+    public FrontFigure copyFigure(FrontFigure toCopy) {
+        return new FrontFigure(toCopy.figure, toCopy.gc, toCopy.getLineColor(), toCopy.getThicknessBorder(), toCopy.getFillColor());
+    }
+
+
 }

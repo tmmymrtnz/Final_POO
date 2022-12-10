@@ -18,11 +18,6 @@ public class Ellipse extends Figure {
         centerPoint.movePoint(x, y);
     }
 
-//    @Override
-//    public void strokeAndFillFigure(GraphicsContext gc) {
-//        gc.fillOval(centerPoint.getX() - sMayorAxis, centerPoint.getY() - sMinorAxis, sMayorAxis * 2, sMinorAxis * 2);
-//        gc.strokeOval(centerPoint.getX() - sMayorAxis, centerPoint.getY() - sMinorAxis, sMayorAxis * 2, sMinorAxis * 2);
-//    }
 
     @Override
     public boolean belongs(Point point) {
@@ -44,6 +39,21 @@ public class Ellipse extends Figure {
 
     public double getsMinorAxis() {
         return sMinorAxis;
+    }
+
+    @Override
+    public void moveCenter(double x, double y) {
+        this.centerPoint.movePoint(x, y);
+    }
+
+    @Override
+    public void strokeAndFillFigure(GraphicsContext gc) {
+        gc.fillOval(getCenterPoint().getX() - getsMayorAxis() / 2,
+                getCenterPoint().getY() - getsMinorAxis() / 2,
+                getsMayorAxis(), getsMinorAxis());
+        gc.strokeOval(getCenterPoint().getX() - getsMayorAxis() / 2,
+                getCenterPoint().getY() - getsMinorAxis() / 2,
+                getsMayorAxis(), getsMinorAxis());
     }
 
 }
