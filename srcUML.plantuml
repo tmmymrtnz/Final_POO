@@ -1,0 +1,190 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class AppLauncher {
+  + AppLauncher(): 
+  + main(String[]): void
+  + start(Stage): void
+}
+class AppMenuBar {
+  + AppMenuBar(): 
+}
+enum Buttons << enumeration >> {
+  - Buttons(ToggleButton): 
+  - button: ToggleButton
+  + getFrontFigure(Point, Point, GraphicsContext, Color, double, Color): FrontFigure?
+  + valueOf(String): Buttons
+  + createFrontFigure(Point, Point, GraphicsContext, Color, double, Color): FrontFigure
+  + values(): Buttons[]
+   button: ToggleButton
+}
+class CanvasState {
+  + CanvasState(): 
+  + formatFigure(FrontFigure, Color, Color, double, double, Color, Color): void
+  + canUndo(): boolean
+  + pasteFigure(): void
+  + previewUndo(): String
+  + previewRedo(): String
+  + recolorBorder(FrontFigure, Color, Color): void
+  + undo(): void
+  + figureBelongs(FrontFigure, Point): boolean
+  + figures(): Iterable<FrontFigure>
+  + canRedo(): boolean
+  + addFigure(FrontFigure): void
+  + deleteFigure(FrontFigure): void
+  + recolorFill(FrontFigure, Color, Color): void
+  + redo(): void
+  + copyFigure(FrontFigure): void
+}
+class ChangesStorage {
+  + ChangesStorage(): 
+  + addChange(Operation): void
+  + undo(): Operation
+  + undoCacheSize(): int
+  + redoCacheSize(): int
+  - moveTopElement(Deque<A>, Deque<A>): void
+  + redo(): Operation
+   redoCacheEmpty: boolean
+   undoCacheEmpty: boolean
+   temporaryRedoCacheInitialized: boolean
+   topElementRedoStack: Operation
+   topElementUndoStack: Operation
+}
+class Circle {
+  + Circle(Point, double): 
+  + toString(): String
+   figureName: String
+   radius: double
+}
+class Ellipse {
+  + Ellipse(Point, double, double): 
+  # sMayorAxis: double
+  # centerPoint: Point
+  # sMinorAxis: double
+  + moveFigure(double, double): void
+  + belongs(Point): boolean
+  + toString(): String
+  + changeCenter(double, double): void
+   figureName: String
+   centerPoint: Point
+   sMinorAxis: double
+   height: double
+   sMayorAxis: double
+   width: double
+}
+class Figure {
+  + Figure(): 
+  - thicknessBorder: double
+  - lineColor: Color
+  - fillColor: Color
+  + belongs(Point): boolean
+  + moveFigure(double, double): void
+  + toString(): String
+  + changeCenter(double, double): void
+   figureName: String
+   thicknessBorder: double
+   height: double
+   fillColor: Color
+   width: double
+   lineColor: Color
+}
+class FrontEllipse {
+  + FrontEllipse(Figure, GraphicsContext, Color, double, Color): 
+  + copyFigure(Point): FrontFigure
+  + strokeAndFillFigure(): void
+}
+class FrontFigure {
+  + FrontFigure(Figure, GraphicsContext, Color, double, Color): 
+  # figure: Figure
+  - fillColor: Color
+  - lineColor: Color
+  + pasteCenter(double, double): void
+  + containsPoint(Point): boolean
+  + moveFigure(double, double): void
+  + toString(): String
+  + strokeAndFillFigure(): void
+  + copyFigure(Point): FrontFigure
+  + copyFormat(FrontFigure): void
+  + belongs(Point): boolean
+  + setConf(Color, double, Color): void
+   figureName: String
+   thicknessBorder: double
+   graphicsContext: GraphicsContext
+   figure: Figure
+   fillColor: Color
+   lineColor: Color
+}
+class FrontRectangle {
+  + FrontRectangle(Figure, GraphicsContext, Color, double, Color): 
+  + strokeAndFillFigure(): void
+  + copyFigure(Point): FrontFigure
+}
+class MainFrame {
+  + MainFrame(CanvasState): 
+}
+class NothingToRedoException {
+  + NothingToRedoException(): 
+}
+class NothingToUndoException {
+  + NothingToUndoException(): 
+}
+class Operation {
+  + Operation(): 
+  ~ execute(): void
+  ~ unExecute(): void
+}
+class PaintPane {
+  + PaintPane(CanvasState, StatusPane): 
+  - updateUndoRedoStatus(): void
+  - createAlert(String): void
+  ~ redrawCanvas(): void
+  ~ pasteFormat(Point): void
+  ~ figureBelongs(FrontFigure, Point): boolean
+}
+class Point {
+  + Point(double, double): 
+  - y: double
+  - x: double
+  + changePoint(double, double): void
+  + equals(Object): boolean
+  + hashCode(): int
+  + toString(): String
+  + movePoint(double, double): void
+   x: double
+   y: double
+}
+class Rectangle {
+  + Rectangle(Point, Point): 
+  - bottomRight: Point
+  - topLeft: Point
+  + belongs(Point): boolean
+  + toString(): String
+  + moveFigure(double, double): void
+  + changeCenter(double, double): void
+   topLeft: Point
+   bottomRight: Point
+   figureName: String
+   height: double
+   width: double
+}
+class Square {
+  + Square(Point, double): 
+  - getSize(Point, Point): double
+  + toString(): String
+   figureName: String
+}
+class StatusPane {
+  + StatusPane(): 
+  + updateStatus(String): void
+}
+
+Circle                  -[#000082,plain]-^  Ellipse                
+Ellipse                 -[#000082,plain]-^  Figure                 
+FrontEllipse            -[#000082,plain]-^  FrontFigure            
+FrontRectangle          -[#000082,plain]-^  FrontFigure            
+Rectangle               -[#000082,plain]-^  Figure                 
+Square                  -[#000082,plain]-^  Rectangle              
+@enduml
