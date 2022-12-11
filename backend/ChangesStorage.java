@@ -5,7 +5,7 @@ import java.util.Deque;
 
 public class ChangesStorage {
     private final Deque<Operation> undoCache = new ArrayDeque<>();
-    private Deque<Operation> temporaryRedoCache;
+    private Deque<Operation> temporaryRedoCache = new ArrayDeque<>();
 
     /**
      * Agrega un elemento al cache de operaciones, en caso de que hayan operaciones dispoibles para
@@ -15,7 +15,7 @@ public class ChangesStorage {
     public void addChange(Operation operation) {
         undoCache.push(operation);
         // "Dropeo" el stack de redo anterior
-        temporaryRedoCache = null;
+        //temporaryRedoCache = null;
     }
 
     /**

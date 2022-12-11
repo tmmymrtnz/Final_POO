@@ -3,6 +3,7 @@ package backend;
 import backend.model.Point;
 import frontend.FrontFigures.FrontFigure;
 import javafx.scene.paint.Color;
+import backend.Exceptions.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -184,7 +185,7 @@ public class CanvasState {
         // El check de si puedo deshacer se hace cuando se habilita/deshabilita el boton
         if (!changesStorage.isUndoCacheEmpty()){
             changesStorage.undo().unExecute();
-        }
+        } else throw new NothingToUndoException();
     }
 
     /**
@@ -195,7 +196,7 @@ public class CanvasState {
         // El check de si puedo rehacer se hace cuando se habilita/deshabilita el boton
         if (!changesStorage.isRedoCacheEmpty()){
             changesStorage.redo().execute();
-        }
+        } else throw new NothingToRedoException();
     }
 
     /**

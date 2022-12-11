@@ -2,6 +2,8 @@ package frontend;
 
 //--------------------------------------
 import backend.CanvasState;
+import backend.Exceptions.NothingToRedoException;
+import backend.Exceptions.NothingToUndoException;
 import backend.model.*;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -274,15 +276,23 @@ public class PaintPane extends BorderPane {
 		});
 
 		undoButton.setOnAction(event -> {
-			canvasState.undo();
-			updateUndoRedoStatus();
-			redrawCanvas();
+			try {
+				canvasState.undo();
+				updateUndoRedoStatus();
+				redrawCanvas();
+			} catch (NothingToUndoException ex) {
+				createAlert(ex.getMessage());
+			}
 		});
 
 		redoButton.setOnAction(event -> {
-			canvasState.redo();
-			updateUndoRedoStatus();
-			redrawCanvas();
+			try {
+				canvasState.redo();
+				updateUndoRedoStatus();
+				redrawCanvas();
+			} catch (NothingToRedoException ex) {
+				createAlert(ex.getMessage());
+			}
 		});
 
 		copyButton.setOnAction(event -> {
@@ -301,7 +311,7 @@ public class PaintPane extends BorderPane {
 		});
 		pasteButton.setOnAction(event -> {
 			if(copyFigure != null){
-				FrontFigure newFigure = selectedFigure.copyFigure(new Point(centerPoint.getX(), centerPoint.getY()));
+				FrontFigure newFigure = copyFigure.copyFigure(new Point(centerPoint.getX(), centerPoint.getY()));
 				canvasState.addFigure(newFigure);
 				updateUndoRedoStatus();
 				redrawCanvas();
@@ -356,6 +366,13 @@ public class PaintPane extends BorderPane {
 
 	boolean figureBelongs(FrontFigure figure, Point eventPoint) {
 		return figure.belongs(eventPoint);
+	}
+
+	private void createAlert(String alertMessage){
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(alertMessage);
+		alert.showAndWait();
 	}
 
 }
