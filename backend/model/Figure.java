@@ -13,6 +13,7 @@ public abstract class Figure {
         this.thicknessBorder = thicknessBorder;
     }
 
+
     public double getThicknessBorder() {
         return thicknessBorder;
     }
@@ -34,16 +35,11 @@ public abstract class Figure {
     }
 
     public abstract void moveFigure(double x, double y);
+
+
     public abstract String getFigureName();
     public abstract boolean belongs(Point point);
     public abstract String toString();
 
-    public abstract Point getCenterPoint();
-    public abstract double getsMayorAxis();
-    public abstract double getsMinorAxis();
-
-    public abstract void moveCenter(double x, double y);
-
-    public abstract void strokeAndFillFigure(GraphicsContext gc);
 
 }

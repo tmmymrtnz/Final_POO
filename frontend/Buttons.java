@@ -23,9 +23,9 @@ public enum Buttons {
     ELIPSE(new ToggleButton("Elipse")){
 
         public FrontFigure createFrontFigure(Point startPoint, Point endPoint, GraphicsContext gc, Color lineColor, double lineWidth, Color fillColor) {
-            Point centerPoint = new Point(Math.abs(endPoint.x + startPoint.x) / 2, (Math.abs((endPoint.y + startPoint.y)) / 2));
-            double sMayorAxis = Math.abs(endPoint.x - startPoint.x);
-            double sMinorAxis = Math.abs(endPoint.y - startPoint.y);
+            Point centerPoint = new Point(startPoint.getX() + (endPoint.getX() - startPoint.getX()) / 2, startPoint.getY() + (endPoint.getY() - startPoint.getY()) / 2);
+            double sMayorAxis = Math.abs(endPoint.getX() - startPoint.getX());
+            double sMinorAxis = Math.abs(endPoint.getY() - startPoint.getY());
             return new FrontEllipse(new Ellipse(centerPoint, sMayorAxis,sMinorAxis), gc, lineColor, lineWidth, fillColor);
         }
     },

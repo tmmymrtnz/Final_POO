@@ -10,21 +10,15 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.web.HTMLEditorSkin;
-import javafx.scene.web.WebView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ResourceBundle;
 
 
 public class PaintPane extends BorderPane {
@@ -41,7 +35,7 @@ public class PaintPane extends BorderPane {
 	// Botones Barra Izquierda
 	ToggleButton selectionButton = new ToggleButton("Seleccionar");
 	ToggleButton deleteButton = new ToggleButton("Borrar");
-	ToggleButton copyFormat = new ToggleButton("Copiar fmt");
+	ToggleButton formatButton = new ToggleButton("Copiar fmt");
 
 	//Botones barra horizontal
 
@@ -68,7 +62,7 @@ public class PaintPane extends BorderPane {
 	FrontFigure selectedFigure;
 
 	// Copiar formato
-	FrontFigure copyFigure;
+	FrontFigure formatFigure;
 
 	// StatusBar
 	StatusPane statusPane;
@@ -85,7 +79,7 @@ public class PaintPane extends BorderPane {
 		buttonsList.add(selectionButton);
 		buttonsList.addAll(Arrays.stream(Buttons.values()).map(Buttons::getButton).toList());
 		buttonsList.add(deleteButton);
-		buttonsList.add(copyFormat);
+		buttonsList.add(formatButton);
 		for (ToggleButton tool : buttonsList) {
 			tool.setMinWidth(90);
 			tool.setToggleGroup(tools);
@@ -182,11 +176,11 @@ public class PaintPane extends BorderPane {
 					statusPane.updateStatus("Ninguna figura encontrada");
 				}
 //			 	if(copyButton.isSelected()){
-//					 copyFigure = selectedFigure;
+//					 formatFigure = selectedFigure;
 //				}
 				redrawCanvas();
 			}
-			if (copyFigure != null) {
+			if (formatFigure != null) {
 				pasteFormat(found, eventPoint);
 			}
 
@@ -207,9 +201,9 @@ public class PaintPane extends BorderPane {
 		});
 
 
-		copyFormat.setOnAction(event -> {
+		formatButton.setOnAction(event -> {
 			if (selectedFigure != null) {
-				copyFigure = selectedFigure;
+				formatFigure = selectedFigure;
 			}
 		});
 
@@ -223,6 +217,7 @@ public class PaintPane extends BorderPane {
 
 		lineColorPicker.setOnAction(event -> {
 			if (selectedFigure != null) {
+				canvasState.recolorBorder(selectedFigure, selectedFigure.getLineColor(), lineColorPicker.getValue());
 				selectedFigure.setLineColor(lineColorPicker.getValue());
 				redrawCanvas();
 			}
@@ -230,6 +225,7 @@ public class PaintPane extends BorderPane {
 
 		fillColorPicker.setOnAction(event -> {
 			if (selectedFigure != null) {
+				canvasState.recolorFill(selectedFigure, selectedFigure.getFillColor(), fillColorPicker.getValue());
 				selectedFigure.setFillColor(fillColorPicker.getValue());
 				redrawCanvas();
 			}
@@ -242,9 +238,19 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+		undoButton.setOnAction(event -> {
+			canvasState.undo();
+			redrawCanvas();
+		});
+
+		redoButton.setOnAction(event -> {
+			canvasState.redo();
+			redrawCanvas();
+		});
+
 //		canvas.setOnKeyPressed(event -> {
 //			if (event.getCode() == KeyCode.C && selectedFigure != null){
-//				copyFigure = selectedFigure;
+//				formatFigure = selectedFigure;
 //			}
 //			if(event.getCode() == KeyCode.V && copyFigure != null){
 //				canvasState.addFigure(copyFigure);
@@ -269,17 +275,18 @@ public class PaintPane extends BorderPane {
 //		canvasState.addFigure(figure);
 //	}
 	void pasteFigure(FrontFigure toPaste){
-		FrontFigure newFigure = toPaste.copyFigure(toPaste);
-		newFigure.moveCenter(canvas.getWidth()/2,canvas.getHeight()/2); //corregir moves
+		FrontFigure newFigure = toPaste.copyFigure();
+		newFigure.pasteCenter(canvas.getWidth()/2,canvas.getHeight()/2); //corregir moves
 		canvasState.addFigure(newFigure);
 		redrawCanvas();
 	}
-	void pasteFormat(Point eventPoint) {
+	void pasteFormat(boolean found, Point eventPoint) {
 		for (FrontFigure figure : canvasState.figures()) {
 			if (figureBelongs(figure, eventPoint)) {
 				found = true;
-				figure.setConf(copyFigure.getLineColor(), copyFigure.getThicknessBorder(), copyFigure.getFillColor());
-				copyFigure = null;
+				canvasState.formatFigure(figure, figure.getLineColor(), formatFigure.getLineColor(), figure.getThicknessBorder(),formatFigure.getThicknessBorder(), figure.getFillColor(), formatFigure.getFillColor());
+				figure.setConf(formatFigure.getLineColor(), formatFigure.getThicknessBorder(), formatFigure.getFillColor());
+				formatFigure = null;
 				redrawCanvas();
 			}
 		}
