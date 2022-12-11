@@ -175,6 +175,26 @@ public class CanvasState {
         });
     }
 
+    public void cutFigure(FrontFigure figure) {
+        list.remove(figure);
+        changesStorage.addChange(new Operation() {
+            @Override
+            void execute() {
+                copiedFigure = figure;
+                list.remove(figure);
+            }
+
+            @Override
+            void unExecute() {
+                copiedFigure = null;
+                list.add(figure);
+            }
+
+            @Override
+            public String toString() { return String.format("Cortar un %s", figure.getFigureName());}
+        });
+    }
+
 
     /**
      * Si corresponde deshacer algo, se deshace la operación

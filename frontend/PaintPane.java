@@ -317,7 +317,7 @@ public class PaintPane extends BorderPane {
 		cutButton.setOnAction(event -> {
 			if (selectedFigure != null) {
 				copyFigure = selectedFigure;
-				canvasState.deleteFigure(selectedFigure);
+				canvasState.cutFigure(selectedFigure);
 				updateUndoRedoStatus();
 				redrawCanvas();
 			}
