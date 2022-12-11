@@ -66,7 +66,9 @@ public abstract class FrontFigure {
         figure.moveFigure(diffX, diffY);
     }
 
-
+    public GraphicsContext getGraphicsContext(){
+        return gc;
+    }
     public String toString() {
         return figure.toString();
     }
@@ -80,12 +82,10 @@ public abstract class FrontFigure {
     }
 
     public void pasteCenter(double x, double y) {
-        figure.moveFigure(x, y);
+        figure.changeCenter(x, y);
     }
 
     public abstract void strokeAndFillFigure();
 
-    public abstract FrontFigure copyFigure();
-
-
+    public abstract FrontFigure copyFigure(Point centerPoint);
 }

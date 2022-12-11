@@ -1,6 +1,8 @@
 package frontend.FrontFigures;
 import backend.model.Ellipse;
 import backend.model.Figure;
+import backend.model.Point;
+import java.awt.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -22,8 +24,10 @@ public class FrontEllipse extends FrontFigure {
     }
 
     @Override
-    public FrontFigure copyFigure() {
-        return new FrontEllipse(this.figure, this.gc, this.getLineColor(), this.getThicknessBorder(), this.getFillColor());
+    public FrontFigure copyFigure(Point centerPoint) {
+        Figure newFig = new Ellipse(centerPoint, localEllipse.getsMayorAxis(), localEllipse.getsMinorAxis());
+        return new FrontEllipse(newFig, getGraphicsContext(), this.getLineColor(), this.getThicknessBorder(), this.getFillColor());
     }
+
 }
 

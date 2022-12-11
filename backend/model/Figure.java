@@ -41,5 +41,7 @@ public abstract class Figure {
     public abstract boolean belongs(Point point);
     public abstract String toString();
 
-
+    public abstract double getWidth();
+    public abstract double getHeight();
+    public abstract void changeCenter(double x, double y);
 }

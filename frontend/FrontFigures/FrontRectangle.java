@@ -1,6 +1,7 @@
 package frontend.FrontFigures;
 import backend.model.Figure;
 import backend.model.Rectangle;
+import backend.model.Point;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import java.awt.*;
@@ -23,9 +24,12 @@ public class FrontRectangle extends FrontFigure {
                 localRectangle.getBottomRight().getY() - localRectangle.getTopLeft().getY());
     }
 
-    @Override
-    public FrontFigure copyFigure() {
-        return new FrontRectangle(this.figure, this.gc, this.getLineColor(), this.getThicknessBorder(), this.getFillColor());
-    }
-}
 
+    @Override
+    public FrontFigure copyFigure(Point centerPoint) {
+        Figure newFig = new Rectangle(new Point(centerPoint.getX() - localRectangle.getWidth()/2, centerPoint.getY() - localRectangle.getHeight()/2),
+                new Point(centerPoint.getX() + localRectangle.getWidth()/2, centerPoint.getY() + localRectangle.getHeight()/2));
+        return new FrontRectangle(newFig, getGraphicsContext(), this.getLineColor(), this.getThicknessBorder(), this.getFillColor());
+    }
+
+}

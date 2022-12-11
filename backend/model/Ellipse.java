@@ -17,7 +17,10 @@ public class Ellipse extends Figure {
     public void moveFigure(double x, double y) {
         centerPoint.movePoint(x, y);
     }
-
+    @Override
+    public void changeCenter(double x, double y) {
+        moveFigure(x, y);
+    }
     @Override
     public String getFigureName(){
         return "Elipse";
@@ -33,6 +36,16 @@ public class Ellipse extends Figure {
     @Override
     public String toString() {
         return String.format("Elipse [Centro: %s, DMayor: %.2f, DMenor: %.2f]", centerPoint, sMayorAxis, sMinorAxis);
+    }
+
+    @Override
+    public double getWidth() {
+        return sMayorAxis*2;
+    }
+
+    @Override
+    public double getHeight() {
+        return sMinorAxis*2;
     }
 
     public Point getCenterPoint() {
