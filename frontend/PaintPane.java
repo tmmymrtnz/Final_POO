@@ -242,7 +242,6 @@ public class PaintPane extends BorderPane {
 
 				if (selectedFigure != null) {
 					selectedFigure.moveFigure(diffX, diffY);
-					//startPoint = eventPoint;
 					redrawCanvas();
 				}
 			}
@@ -268,6 +267,7 @@ public class PaintPane extends BorderPane {
 			if (selectedFigure != null) {
 				canvasState.recolorBorder(selectedFigure, selectedFigure.getLineColor(), lineColorPicker.getValue());
 				selectedFigure.setLineColor(lineColorPicker.getValue());
+				updateUndoRedoStatus();
 				redrawCanvas();
 			}
 		});
@@ -276,6 +276,7 @@ public class PaintPane extends BorderPane {
 			if (selectedFigure != null) {
 				canvasState.recolorFill(selectedFigure, selectedFigure.getFillColor(), fillColorPicker.getValue());
 				selectedFigure.setFillColor(fillColorPicker.getValue());
+				updateUndoRedoStatus();
 				redrawCanvas();
 			}
 		});
@@ -353,6 +354,7 @@ public class PaintPane extends BorderPane {
 				canvasState.formatFigure(figure, figure.getLineColor(), formatFigure.getLineColor(), figure.getThicknessBorder(),formatFigure.getThicknessBorder(), figure.getFillColor(), formatFigure.getFillColor());
 				figure.copyFormat(formatFigure);
 				formatFigure = null;
+				updateUndoRedoStatus();
 				redrawCanvas();
 			}
 		}

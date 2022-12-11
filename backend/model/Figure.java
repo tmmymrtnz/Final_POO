@@ -13,30 +13,11 @@ public abstract class Figure {
         this.thicknessBorder = thicknessBorder;
     }
 
-
     public double getThicknessBorder() {
         return thicknessBorder;
     }
 
-    public Color getLineColor() {
-        return lineColor;
-    }
-
-    public void setLineColor(Color lineColor) {
-        this.lineColor = lineColor;
-    }
-
-    public Color getFillColor() {
-        return fillColor;
-    }
-
-    public void setFillColor(Color fillColor) {
-        this.fillColor = fillColor;
-    }
-
     public abstract void moveFigure(double x, double y);
-
-
     public abstract String getFigureName();
     public abstract boolean belongs(Point point);
     public abstract String toString();

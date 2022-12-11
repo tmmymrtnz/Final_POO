@@ -14,8 +14,6 @@ public class ChangesStorage {
      */
     public void addChange(Operation operation) {
         undoCache.push(operation);
-        // "Dropeo" el stack de redo anterior
-        //temporaryRedoCache = null;
     }
 
     /**

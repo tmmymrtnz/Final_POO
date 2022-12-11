@@ -77,14 +77,6 @@ public abstract class FrontFigure {
         setConf(figure.getLineColor(), figure.getThicknessBorder(), figure.getFillColor());
     }
 
-    public Figure getFigure() {
-        return figure;
-    }
-
-    public void pasteCenter(double x, double y) {
-        figure.changeCenter(x, y);
-    }
-
     public abstract void strokeAndFillFigure();
 
     public abstract FrontFigure copyFigure(Point centerPoint);

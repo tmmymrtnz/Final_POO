@@ -27,8 +27,6 @@ public class Rectangle extends Figure {
 
     @Override
     public void moveFigure(double x, double y) {
-//        topLeft.movePoint(x - getWidth()/2, y + getHeight()/2);
-//        bottomRight.movePoint(x + getWidth()/2, y - getHeight()/2);
         topLeft.movePoint(x, y);
         bottomRight.movePoint(x, y);
     }
