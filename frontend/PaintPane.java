@@ -310,6 +310,7 @@ public class PaintPane extends BorderPane {
 		copyButton.setOnAction(event -> {
 			if (selectedFigure != null) {
 				canvasState.copyFigure(selectedFigure);
+				updateUndoRedoStatus();
 				copyFigure = selectedFigure;
 			}
 		});
@@ -324,7 +325,7 @@ public class PaintPane extends BorderPane {
 		pasteButton.setOnAction(event -> {
 			if(copyFigure != null){
 				FrontFigure newFigure = copyFigure.copyFigure(new Point(centerPoint.getX(), centerPoint.getY()));
-				canvasState.addFigure(newFigure);
+				canvasState.pasteFigure(newFigure);
 				updateUndoRedoStatus();
 				redrawCanvas();
 			}

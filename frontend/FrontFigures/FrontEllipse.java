@@ -1,4 +1,5 @@
 package frontend.FrontFigures;
+import backend.model.Circle;
 import backend.model.Ellipse;
 import backend.model.Figure;
 import backend.model.Point;
@@ -25,8 +26,12 @@ public class FrontEllipse extends FrontFigure {
 
     @Override
     public FrontFigure copyFigure(Point centerPoint) {
-        Figure newFig = new Ellipse(centerPoint, localEllipse.getsMayorAxis(), localEllipse.getsMinorAxis());
-        return new FrontEllipse(newFig, getGraphicsContext(), this.getLineColor(), this.getThicknessBorder(), this.getFillColor());
+        if (figure instanceof Circle) {
+            return new FrontEllipse(new Circle(centerPoint, localEllipse.getsMayorAxis()/2), gc, getLineColor(), getThicknessBorder(), getFillColor());
+            }
+        else{
+            return new FrontEllipse(new Ellipse(centerPoint, localEllipse.getsMayorAxis(), localEllipse.getsMinorAxis()), gc, getLineColor(), getThicknessBorder(), getFillColor());
+        }
     }
 
 }

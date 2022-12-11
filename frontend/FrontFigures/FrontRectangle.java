@@ -2,6 +2,7 @@ package frontend.FrontFigures;
 import backend.model.Figure;
 import backend.model.Rectangle;
 import backend.model.Point;
+import backend.model.Square;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import java.awt.*;
@@ -27,6 +28,9 @@ public class FrontRectangle extends FrontFigure {
 
     @Override
     public FrontFigure copyFigure(Point centerPoint) {
+        if (figure instanceof Square){
+            return new FrontRectangle(new Square(new Point(centerPoint.getX() - localRectangle.getWidth()/2, centerPoint.getY() - localRectangle.getHeight()/2), localRectangle.getWidth()), gc, getLineColor(), getThicknessBorder(), getFillColor());
+        }
         Figure newFig = new Rectangle(new Point(centerPoint.getX() - localRectangle.getWidth()/2, centerPoint.getY() - localRectangle.getHeight()/2),
                 new Point(centerPoint.getX() + localRectangle.getWidth()/2, centerPoint.getY() + localRectangle.getHeight()/2));
         return new FrontRectangle(newFig, getGraphicsContext(), this.getLineColor(), this.getThicknessBorder(), this.getFillColor());

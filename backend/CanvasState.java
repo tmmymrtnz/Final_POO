@@ -157,22 +157,21 @@ public class CanvasState {
         });
     }
 
-    public void pasteFigure() {
-        if (copiedFigure == null) return;
-        list.add(copiedFigure);
+    public void pasteFigure(FrontFigure figure) {
+        list.add(figure);
         changesStorage.addChange(new Operation() {
             @Override
             void execute() {
-                list.add(copiedFigure);
+                list.add(figure);
             }
 
             @Override
             void unExecute() {
-                list.remove(copiedFigure);
+                list.remove(figure);
             }
 
             @Override
-            public String toString() { return String.format("Pegar un %s", copiedFigure.getFigureName());}
+            public String toString() { return String.format("Pegar un %s", figure.getFigureName());}
         });
     }
 
