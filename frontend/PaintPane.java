@@ -44,17 +44,28 @@ public class PaintPane extends BorderPane {
 	ToggleButton formatButton = new ToggleButton("Copiar fmt");
 
 	//Botones barra horizontal
-//	String cutIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("cutIcon");
-//	Image cutIcon = new Image(HTMLEditorSkin.class.getResource(cutIconPath).toString());
-//	Button cutButton = new Button("Cortar", new ImageView(cutIcon));
-	Button cutButton = new Button("Cortar");
-	Button copyButton = new Button("Copiar");
-	Button pasteButton = new Button("Pegar");
-	Button undoButton = new Button("Deshacer");
-	Button redoButton = new Button("Rehacer");
+	String cutIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("cutIcon");
+	Image cutIcon = new Image(HTMLEditorSkin.class.getClassLoader().getResource("javafx/scene/web/"+cutIconPath).toString());
+	Button cutButton = new Button("Cortar", new ImageView(cutIcon));
 
+	String pasteIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("pasteIcon");
+	Image pasteIcon = new Image(HTMLEditorSkin.class.getClassLoader().getResource("javafx/scene/web/"+pasteIconPath).toString());
+	Button pasteButton = new Button("Pegar", new ImageView(pasteIcon));
+
+	String copyIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("copyIcon");
+	Image copyIcon = new Image(HTMLEditorSkin.class.getClassLoader().getResource("javafx/scene/web/"+copyIconPath).toString());
+	Button copyButton = new Button("Copiar", new ImageView(copyIcon));
+
+	String undoIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("undoIcon");
+	Image undoIcon = new Image(HTMLEditorSkin.class.getClassLoader().getResource("javafx/scene/web/"+undoIconPath).toString());
+	Button undoButton = new Button("Deshacer", new ImageView(undoIcon));
+
+	String redoIconPath =  ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("redoIcon");
+	Image redoIcon = new Image(HTMLEditorSkin.class.getClassLoader().getResource("javafx/scene/web/"+redoIconPath).toString());
+	Button redoButton = new Button("Rehacer", new ImageView(redoIcon));
+
+	//Labels de undo y redo
 	Label undoLabel = new Label("");
-
 	Label undoCounter = new Label("0");
 	Label redoLabel = new Label("");
 	Label redoCounter = new Label("0");
@@ -88,6 +99,7 @@ public class PaintPane extends BorderPane {
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
+
 		List<ToggleButton> buttonsList = new ArrayList<>();
 		ToggleGroup tools = new ToggleGroup();
 		buttonsList.add(selectionButton);
