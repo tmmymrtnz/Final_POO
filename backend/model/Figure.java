@@ -17,33 +17,12 @@ public abstract class Figure {
         return thicknessBorder;
     }
 
-    public Color getLineColor() {
-        return lineColor;
-    }
-
-    public void setLineColor(Color lineColor) {
-        this.lineColor = lineColor;
-    }
-
-    public Color getFillColor() {
-        return fillColor;
-    }
-
-    public void setFillColor(Color fillColor) {
-        this.fillColor = fillColor;
-    }
-
     public abstract void moveFigure(double x, double y);
     public abstract String getFigureName();
     public abstract boolean belongs(Point point);
     public abstract String toString();
 
-    public abstract Point getCenterPoint();
-    public abstract double getsMayorAxis();
-    public abstract double getsMinorAxis();
-
-    public abstract void moveCenter(double x, double y);
-
-    public abstract void strokeAndFillFigure(GraphicsContext gc);
-
+    public abstract double getWidth();
+    public abstract double getHeight();
+    public abstract void changeCenter(double x, double y);
 }

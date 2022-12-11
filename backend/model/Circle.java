@@ -15,4 +15,9 @@ public class Circle extends Ellipse {
         return sMayorAxis/2;
     }
 
+    @Override
+    public String getFigureName(){
+        return "Circulo";
+    }
+
 }

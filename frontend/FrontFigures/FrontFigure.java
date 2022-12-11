@@ -8,7 +8,7 @@ import backend.model.Point;
 
 import java.awt.*;
 
-public class FrontFigure {
+public abstract class FrontFigure {
 
     protected GraphicsContext gc;
     protected Figure figure;
@@ -20,10 +20,14 @@ public class FrontFigure {
         setConf(lineColor, lineWidth, fillColor);
     }
 
-    private void setConf(Color lineColor, double lineWidth, Color fillColor) {
+    public void setConf(Color lineColor, double lineWidth, Color fillColor) {
         setLineColor(lineColor);
         setThicknessBorder(lineWidth);
         setFillColor(fillColor);
+    }
+
+    public String getFigureName() {
+        return figure.getFigureName();
     }
 
     public void setLineColor(Color lineColor) {
@@ -54,8 +58,6 @@ public class FrontFigure {
         return figure.getThicknessBorder();
     }
 
-    public void strokeAndFillFigure() { figure.strokeAndFillFigure(gc); }
-
     public void setThicknessBorder(double value) {
         figure.setThicknessBorder(value);
     }
@@ -64,10 +66,9 @@ public class FrontFigure {
         figure.moveFigure(diffX, diffY);
     }
 
-    public void moveCenter(double diffX, double diffY) {
-        figure.moveCenter(diffX, diffY);
+    public GraphicsContext getGraphicsContext(){
+        return gc;
     }
-
     public String toString() {
         return figure.toString();
     }
@@ -76,14 +77,7 @@ public class FrontFigure {
         setConf(figure.getLineColor(), figure.getThicknessBorder(), figure.getFillColor());
     }
 
-    public Figure getFigure() {
-        return figure;
-    }
+    public abstract void strokeAndFillFigure();
 
-    //raro
-    public FrontFigure copyFigure(FrontFigure toCopy) {
-        return new FrontFigure(toCopy.figure, toCopy.gc, toCopy.getLineColor(), toCopy.getThicknessBorder(), toCopy.getFillColor());
-    }
-
-
+    public abstract FrontFigure copyFigure(Point centerPoint);
 }

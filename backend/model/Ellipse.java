@@ -17,16 +17,34 @@ public class Ellipse extends Figure {
     public void moveFigure(double x, double y) {
         centerPoint.movePoint(x, y);
     }
-
+    @Override
+    public void changeCenter(double x, double y) {
+        moveFigure(x, y);
+    }
+    @Override
+    public String getFigureName(){
+        return "Elipse";
+    }
 
     @Override
     public boolean belongs(Point point) {
-        return Math.pow(point.getX() - centerPoint.getX(), 2) / Math.pow(sMayorAxis, 2) + Math.pow(point.getY() - centerPoint.getY(), 2) / Math.pow(sMinorAxis, 2) <= 1;
+        return (Math.pow(point.getX() - getCenterPoint().getX(), 2) / Math.pow(getsMayorAxis(), 2)) +
+                (Math.pow(point.getY() - getCenterPoint().getY(), 2) / Math.pow(getsMinorAxis(), 2))<= 0.30;
     }
 
     @Override
     public String toString() {
         return String.format("Elipse [Centro: %s, DMayor: %.2f, DMenor: %.2f]", centerPoint, sMayorAxis, sMinorAxis);
+    }
+
+    @Override
+    public double getWidth() {
+        return sMayorAxis*2;
+    }
+
+    @Override
+    public double getHeight() {
+        return sMinorAxis*2;
     }
 
     public Point getCenterPoint() {
@@ -41,19 +59,7 @@ public class Ellipse extends Figure {
         return sMinorAxis;
     }
 
-    @Override
-    public void moveCenter(double x, double y) {
-        this.centerPoint.changePoint(x, y);
-    }
 
-    @Override
-    public void strokeAndFillFigure(GraphicsContext gc) {
-        gc.fillOval(getCenterPoint().getX() - getsMayorAxis() / 2,
-                getCenterPoint().getY() - getsMinorAxis() / 2,
-                getsMayorAxis(), getsMinorAxis());
-        gc.strokeOval(getCenterPoint().getX() - getsMayorAxis() / 2,
-                getCenterPoint().getY() - getsMinorAxis() / 2,
-                getsMayorAxis(), getsMinorAxis());
-    }
+
 
 }

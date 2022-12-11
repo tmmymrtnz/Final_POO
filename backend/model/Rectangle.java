@@ -1,14 +1,14 @@
 package backend.model;
 
-import javafx.scene.canvas.GraphicsContext;
 
 public class Rectangle extends Figure {
 
-    private Point topLeft, bottomRight;
+    private Point topLeft, bottomRight, centerPoint;
 
     public Rectangle(Point topLeft, Point bottomRight) {
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
+        this.centerPoint = new Point((topLeft.getX() + bottomRight.getX())/2, (topLeft.getY() + bottomRight.getY())/2);
     }
 
     public Point getTopLeft() {
@@ -18,6 +18,12 @@ public class Rectangle extends Figure {
     public Point getBottomRight() {
         return bottomRight;
     }
+    public double getWidth() {
+        return Math.abs(topLeft.getX() - bottomRight.getX());
+    }
+    public double getHeight() {
+        return Math.abs(topLeft.getY() - bottomRight.getY());
+    }
 
     @Override
     public void moveFigure(double x, double y) {
@@ -26,9 +32,18 @@ public class Rectangle extends Figure {
     }
 
     @Override
-    public void moveCenter(double x, double y) {
-        this.centerPoint.changePoint(x, y);
+    public void changeCenter(double x, double y){
+        centerPoint.changePoint(x, y);
+        topLeft.changePoint(x - getWidth()/2, y - getHeight()/2);
+        bottomRight.changePoint(x + getWidth()/2, y + getHeight()/2);
     }
+
+
+    @Override
+    public String getFigureName(){
+        return "Rectangulo";
+    }
+
 
     @Override
     public boolean belongs(Point point) {
@@ -39,7 +54,5 @@ public class Rectangle extends Figure {
     public String toString() {
         return String.format("Rectángulo [ %s , %s ]", topLeft, bottomRight);
     }
-
-
 
 }

@@ -1,30 +1,30 @@
 package frontend;
 
+//--------------------------------------
 import backend.CanvasState;
+import backend.Exceptions.NothingToRedoException;
+import backend.Exceptions.NothingToUndoException;
 import backend.model.*;
-import frontend.FrontFigures.FrontFigure;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import frontend.FrontFigures.FrontFigure;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Region;
 import javafx.scene.web.HTMLEditorSkin;
-import javafx.scene.web.WebView;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
+
+import java.util.*;
 
 
 public class PaintPane extends BorderPane {
@@ -41,17 +41,35 @@ public class PaintPane extends BorderPane {
 	// Botones Barra Izquierda
 	ToggleButton selectionButton = new ToggleButton("Seleccionar");
 	ToggleButton deleteButton = new ToggleButton("Borrar");
-	ToggleButton copyFormat = new ToggleButton("Copiar fmt");
+	ToggleButton formatButton = new ToggleButton("Copiar fmt");
 
 	//Botones barra horizontal
+	String cutIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("cutIcon");
+	Image cutIcon = new Image(HTMLEditorSkin.class.getClassLoader().getResource("javafx/scene/web/"+cutIconPath).toString());
+	Button cutButton = new Button("Cortar", new ImageView(cutIcon));
 
-	ToggleButton cutButton = new ToggleButton("Cortar");
+	String pasteIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("pasteIcon");
+	Image pasteIcon = new Image(HTMLEditorSkin.class.getClassLoader().getResource("javafx/scene/web/"+pasteIconPath).toString());
+	Button pasteButton = new Button("Pegar", new ImageView(pasteIcon));
 
-	ToggleButton copyButton = new ToggleButton("Copiar");
-	ToggleButton pasteButton = new ToggleButton("Pegar");
+	String copyIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("copyIcon");
+	Image copyIcon = new Image(HTMLEditorSkin.class.getClassLoader().getResource("javafx/scene/web/"+copyIconPath).toString());
+	Button copyButton = new Button("Copiar", new ImageView(copyIcon));
 
-	ToggleButton undoButton = new ToggleButton("Deshacer");
-	ToggleButton redoButton = new ToggleButton("Rehacer");
+	String undoIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("undoIcon");
+	Image undoIcon = new Image(HTMLEditorSkin.class.getClassLoader().getResource("javafx/scene/web/"+undoIconPath).toString());
+	Button undoButton = new Button("Deshacer", new ImageView(undoIcon));
+
+	String redoIconPath =  ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("redoIcon");
+	Image redoIcon = new Image(HTMLEditorSkin.class.getClassLoader().getResource("javafx/scene/web/"+redoIconPath).toString());
+	Button redoButton = new Button("Rehacer", new ImageView(redoIcon));
+
+	//Labels de undo y redo
+	Label undoLabel = new Label("");
+	Label undoCounter = new Label("0");
+	Label redoLabel = new Label("");
+	Label redoCounter = new Label("0");
+
 
 	Slider thicknessBorder = new Slider(1.0, 50.0, 1.0);
 	ColorPicker lineColorPicker = new ColorPicker(lineColor);
@@ -68,24 +86,26 @@ public class PaintPane extends BorderPane {
 	FrontFigure selectedFigure;
 
 	// Copiar formato
+	FrontFigure formatFigure;
+	// Copiar figura
 	FrontFigure copyFigure;
 
 	// StatusBar
 	StatusPane statusPane;
 
 	// Centro
-	private final Point centerPoint = new Point(400, 300);
+	private final Point centerPoint = new Point(canvas.getWidth()/2, canvas.getHeight()/2);
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
+
 		List<ToggleButton> buttonsList = new ArrayList<>();
-		//ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton, copyFormat};
 		ToggleGroup tools = new ToggleGroup();
 		buttonsList.add(selectionButton);
 		buttonsList.addAll(Arrays.stream(Buttons.values()).map(Buttons::getButton).toList());
 		buttonsList.add(deleteButton);
-		buttonsList.add(copyFormat);
+		buttonsList.add(formatButton);
 		for (ToggleButton tool : buttonsList) {
 			tool.setMinWidth(90);
 			tool.setToggleGroup(tools);
@@ -111,19 +131,40 @@ public class PaintPane extends BorderPane {
 
 	//barra horizontal copiar pegar cortar
 		HBox IconBar = new HBox(10);
-		List<ToggleButton> iconList = new ArrayList<>();
+		List<Button> iconList = new ArrayList<>();
 		iconList.add(cutButton);
 		iconList.add(copyButton);
 		iconList.add(pasteButton);
-		iconList.add(undoButton);
-		iconList.add(redoButton);
+
 		IconBar.getChildren().addAll(iconList);
-		for (ToggleButton tool : iconList) {
+		for (Button tool : iconList) {
 			tool.setMinWidth(90);
-			tool.setToggleGroup(tools);
 			tool.setCursor(Cursor.HAND);
 		}
-		setTop(IconBar);
+		IconBar.setPadding(new Insets(5));
+		IconBar.setStyle("-fx-background-color: #999");
+
+		List<Button> undoRedo = new ArrayList<>();
+		undoRedo.add(undoButton);
+		undoRedo.add(redoButton);
+
+		for(Button tool : undoRedo) {
+			tool.setMinWidth(90);
+			tool.setCursor(Cursor.HAND);
+		}
+
+		HBox undoRedoBar = new HBox(10);
+		undoRedoBar.getChildren().addAll(undoLabel, undoCounter);
+		undoRedoBar.getChildren().addAll(undoRedo);
+	 	undoRedoBar.getChildren().addAll(redoLabel, redoCounter);
+		undoRedoBar.setPadding(new Insets(5));
+		undoRedoBar.setStyle("-fx-background-color: #999; -fx-alignment: center;");
+
+		BorderPane topPane = new BorderPane();
+		topPane.setTop(IconBar);
+		topPane.setCenter(undoRedoBar);
+
+		setTop(topPane);
 
 		canvas.setOnMousePressed(event -> {
 			startPoint = new Point(event.getX(), event.getY());
@@ -143,6 +184,7 @@ public class PaintPane extends BorderPane {
 			}
 			canvasState.addFigure(newFigure);
 			startPoint = null;
+			updateUndoRedoStatus();
 			redrawCanvas();
 		});
 
@@ -168,6 +210,7 @@ public class PaintPane extends BorderPane {
 			boolean found = false;
 			if (selectionButton.isSelected()) {
 				StringBuilder label = new StringBuilder("Se seleccionó: ");
+
 				for (FrontFigure figure : canvasState.figures()) {
 					if (figureBelongs(figure, eventPoint)) {
 						found = true;
@@ -175,19 +218,18 @@ public class PaintPane extends BorderPane {
 						label.append(figure.toString());
 					}
 				}
+
 				if (found) {
 					statusPane.updateStatus(label.toString());
 				} else {
 					selectedFigure = null;
 					statusPane.updateStatus("Ninguna figura encontrada");
 				}
-//			 	if(copyButton.isSelected()){
-//					 copyFigure = selectedFigure;
-//				}
+				updateUndoRedoStatus();
 				redrawCanvas();
 			}
-			if (copyFigure != null) {
-				pasteFormat(found, eventPoint);
+			if (formatFigure != null) {
+				pasteFormat(eventPoint);
 			}
 
 		});
@@ -200,16 +242,15 @@ public class PaintPane extends BorderPane {
 
 				if (selectedFigure != null) {
 					selectedFigure.moveFigure(diffX, diffY);
-					//startPoint = eventPoint;
 					redrawCanvas();
 				}
 			}
 		});
 
 
-		copyFormat.setOnAction(event -> {
+		formatButton.setOnAction(event -> {
 			if (selectedFigure != null) {
-				copyFigure = selectedFigure;
+				formatFigure = selectedFigure;
 			}
 		});
 
@@ -217,20 +258,25 @@ public class PaintPane extends BorderPane {
 			if (selectedFigure != null) {
 				canvasState.deleteFigure(selectedFigure);
 				selectedFigure = null;
+				updateUndoRedoStatus();
 				redrawCanvas();
 			}
 		});
 
 		lineColorPicker.setOnAction(event -> {
 			if (selectedFigure != null) {
+				canvasState.recolorBorder(selectedFigure, selectedFigure.getLineColor(), lineColorPicker.getValue());
 				selectedFigure.setLineColor(lineColorPicker.getValue());
+				updateUndoRedoStatus();
 				redrawCanvas();
 			}
 		});
 
 		fillColorPicker.setOnAction(event -> {
 			if (selectedFigure != null) {
+				canvasState.recolorFill(selectedFigure, selectedFigure.getFillColor(), fillColorPicker.getValue());
 				selectedFigure.setFillColor(fillColorPicker.getValue());
+				updateUndoRedoStatus();
 				redrawCanvas();
 			}
 		});
@@ -242,44 +288,73 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
-//		canvas.setOnKeyPressed(event -> {
-//			if (event.getCode() == KeyCode.C && selectedFigure != null){
-//				copyFigure = selectedFigure;
-//			}
-//			if(event.getCode() == KeyCode.V && copyFigure != null){
-//				canvasState.addFigure(copyFigure);
-//				redrawCanvas();
-//			}
-//			if(event.getCode() == KeyCode.X && selectedFigure != null){
-//				canvasState.deleteFigure(selectedFigure);
-//				copyFigure = selectedFigure;
-//				selectedFigure = null;
-//				redrawCanvas();
-//			}
-//		});
+		undoButton.setOnAction(event -> {
+			try {
+				canvasState.undo();
+				updateUndoRedoStatus();
+				redrawCanvas();
+			} catch (NothingToUndoException ex) {
+				createAlert(ex.getMessage());
+			}
+		});
+
+		redoButton.setOnAction(event -> {
+			try {
+				canvasState.redo();
+				updateUndoRedoStatus();
+				redrawCanvas();
+			} catch (NothingToRedoException ex) {
+				createAlert(ex.getMessage());
+			}
+		});
+
+		copyButton.setOnAction(event -> {
+			if (selectedFigure != null) {
+				canvasState.copyFigure(selectedFigure);
+				updateUndoRedoStatus();
+				copyFigure = selectedFigure;
+			}
+		});
+		cutButton.setOnAction(event -> {
+			if (selectedFigure != null) {
+				copyFigure = selectedFigure;
+				canvasState.cutFigure(selectedFigure);
+				updateUndoRedoStatus();
+				redrawCanvas();
+			}
+		});
+		pasteButton.setOnAction(event -> {
+			if(copyFigure != null){
+				FrontFigure newFigure = copyFigure.copyFigure(new Point(centerPoint.getX(), centerPoint.getY()));
+				canvasState.pasteFigure(newFigure);
+				updateUndoRedoStatus();
+				redrawCanvas();
+			}
+		});
+
+		this.setOnKeyPressed(keyEvent -> {
+			if(keyEvent.isControlDown()){
+				if (keyEvent.getCode().equals(KeyCode.C) && selectedFigure != null) {
+					copyButton.fire();
+				}
+				if (keyEvent.getCode().equals(KeyCode.V) && copyFigure != null) {
+					pasteButton.fire();
+				}
+				if(keyEvent.getCode().equals(KeyCode.X)){
+					cutButton.fire();
+				}
+		}});
 
 		setLeft(buttonsBox);
 		setRight(canvas);
 	}
-
-//	void pasteFigureCenter(FrontFigure figure){
-//		double x = (canvas.getWidth() - figure.getWidth()) / 2;
-//		double y = (canvas.getHeight() - figure.getHeight()) / 2;
-//		figure.moveFigure(x, y);
-//		canvasState.addFigure(figure);
-//	}
-	void pasteFigure(FrontFigure toPaste){
-		FrontFigure newFigure = toPaste.copyFigure(toPaste);
-		newFigure.moveCenter(canvas.getWidth()/2,canvas.getHeight()/2); //corregir moves
-		canvasState.addFigure(newFigure);
-		redrawCanvas();
-	}
 	void pasteFormat(Point eventPoint) {
 		for (FrontFigure figure : canvasState.figures()) {
 			if (figureBelongs(figure, eventPoint)) {
-				found = true;
-				figure.setConf(copyFigure.getLineColor(), copyFigure.getThicknessBorder(), copyFigure.getFillColor());
-				copyFigure = null;
+				canvasState.formatFigure(figure, figure.getLineColor(), formatFigure.getLineColor(), figure.getThicknessBorder(),formatFigure.getThicknessBorder(), figure.getFillColor(), formatFigure.getFillColor());
+				figure.copyFormat(formatFigure);
+				formatFigure = null;
+				updateUndoRedoStatus();
 				redrawCanvas();
 			}
 		}
@@ -299,9 +374,20 @@ public class PaintPane extends BorderPane {
 		}
 	}
 
+	private void updateUndoRedoStatus() {
+		undoLabel.setText(canvasState.previewUndo());
+		redoLabel.setText(canvasState.previewRedo());
+	}
 
 	boolean figureBelongs(FrontFigure figure, Point eventPoint) {
 		return figure.belongs(eventPoint);
+	}
+
+	private void createAlert(String alertMessage){
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(alertMessage);
+		alert.showAndWait();
 	}
 
 }
